@@ -176,10 +176,10 @@ void vStatus() {
       vSensRums();
       vDoza();
       if (buttDn.isHolded()) {
-        iStatus = 80;
+        iStatus = 70;
       }
       if (buttUp.isHolded()) {
-        iStatus = 70;
+        iStatus = 100;
       }
       if (buttEnt.isClick()) {
         iStatus = 40;
@@ -265,17 +265,20 @@ void vStatus() {
       buttDn.isHolded();
       buttDn.isClick();
       buttUp.isClick();
+      myTimer.setTimeout(5000);   // настроить таймаут
       break;
     case 71://Промывка
+      iStatus = DelayWithSensRum(iStatus, 20);
       if (buttUp.isClick()) {
-        iStatus = 90;
+        iStatus = 20;
       }
       if (buttDn.isClick()) {
         buttEnt.isClick();
-        iStatus = 20;
+        iStatus = 80;
       }
       if (buttEnt.state()) {
         digitalWrite(PIN_PUMP_ON, 1);
+        myTimer.setTimeout(5000);   // настроить таймаут
       } else digitalWrite(PIN_PUMP_ON, 0);
       break;
     case 80://Зарядка
@@ -295,7 +298,7 @@ void vStatus() {
         iStatus = 60;
       }
       if (buttUp.isClick()) {
-        iStatus = 20;
+        iStatus = 70;
       }
       iStatus = DelayWithSensRum(iStatus, 20);
       break;
@@ -310,14 +313,25 @@ void vStatus() {
     case 91:// Световые эфекты
       int iNumEf ;
       if (buttDn.isHolded()) {
-        iStatus = 70;
+        iStatus = 100;
       }
       LedEfNum(buttUp.isClick(), buttDn.isClick());
       if  ( buttEnt.isClick()) {
         iNumEf = LedEfNum(buttUp.isClick(), buttDn.isClick());
       }
       vLedEfSel(iNumEf);
-
+      break;
+      case 100:// автоналив
+        fPrintChar(24);// п
+       iStatus = 101;
+      break;
+      case 101:// автоналив
+        if (buttDn.isHolded()) {
+           iStatus = 20;
+        }
+          if (buttUp.isHolded()) {
+           iStatus = 90;
+        }
       break;
   }//switch (iStatus)
 }//void vStatus()
@@ -1031,7 +1045,7 @@ void vLedEfSel(int iSel) {
     case 2:
       vLedEf2(LedData2,  buttEnt.isSingle());
       break;
-      case 3:
+    case 3:
       vLedEf2(LedData3,  buttEnt.isSingle());
       break;
   }
