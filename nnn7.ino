@@ -173,7 +173,7 @@ void vStatus() {
       buttEnt.isClick();
       break;
     case 21://
-      vSensRums();
+      vSensRums(1);
       vDoza();
       if (buttDn.isHolded()) {
         iStatus = 70;
@@ -200,7 +200,7 @@ void vStatus() {
         vTestFoto();
       }
 #endif
-      vSensRums();
+      vSensRums(1);
       if (buttEnt.isHolded()) {
         vSaveFotoSens();
         iStatus = 20;
@@ -321,17 +321,17 @@ void vStatus() {
       }
       vLedEfSel(iNumEf);
       break;
-      case 100:// автоналив
-        fPrintChar(24);// п
-       iStatus = 101;
+    case 100:// автоналив
+      fPrintChar(24);// п
+      iStatus = 101;
       break;
-      case 101:// автоналив
-        if (buttDn.isHolded()) {
-           iStatus = 20;
-        }
-          if (buttUp.isHolded()) {
-           iStatus = 90;
-        }
+    case 101:// автоналив
+      if (buttDn.isHolded()) {
+        iStatus = 20;
+      }
+      if (buttUp.isHolded()) {
+        iStatus = 90;
+      }
       break;
   }//switch (iStatus)
 }//void vStatus()
@@ -347,7 +347,7 @@ void fPrintChar(int iNumChar) {
 void bPovorot(int iUgol) {
   static int iUgolLast;
   if (iUgol != iUgolLast) {
-    vSensRums();
+    vSensRums(1);
     servo.setTargetDeg(iUgol);
     while (!servo.tick()) {
 #if(_UGOL_)
@@ -434,10 +434,13 @@ void vFotoRum(int iPos) {
   }
   else  iRum[iPos] = 0;
 }
-void vSensRums() {
+void vSensRums(bool bLeds) {
   for (int iPos = 0; iPos < 6; iPos++) {
     vFotoRum(iPos);
-    vLedRum(iPos);
+    if (bLeds) {
+      vLedRum(iPos);
+    } else  cascade[1].clear();
+
   }
 }//vSensRums()
 void vSaveFotoSens() {
@@ -643,7 +646,7 @@ void vPump(unsigned long ulTime) {
     myTimer.setTimeout(ulTime);   // настроить таймаут
     digitalWrite(PIN_PUMP_ON, 1);
     while (!myTimer.isReady()) {
-      vSensRums();
+      vSensRums(1);
     }
     digitalWrite(PIN_PUMP_ON, 0);
   }
@@ -651,7 +654,7 @@ void vPump(unsigned long ulTime) {
 void  DelayWithSensRum(unsigned long ulTime) {
   myTimer.setTimeout(ulTime);   // настроить таймаут
   while (!myTimer.isReady()) {
-    vSensRums();
+    vSensRums(1);
   }
 }
 int  DelayWithSensRum( int iStatCuret, int StatJamp) {
@@ -795,9 +798,9 @@ void vPrintCapBat(int Vbat) {
 }
 void vRefreshFoto() {
   iRumLast[0] = 1; iRumLast[1] = 1; iRumLast[2] = 1; iRumLast[3] = 1; iRumLast[4] = 1; iRumLast[5] = 1;
-  vSensRums();
+  vSensRums(1);
   iRumLast[0] = 0; iRumLast[1] = 0; iRumLast[2] = 0; iRumLast[3] = 0; iRumLast[4] = 0; iRumLast[5] = 0;
-  vSensRums();
+  vSensRums(1);
 }
 #if(_DEBAG_)
 void vTestFoto() {
@@ -1049,4 +1052,10 @@ void vLedEfSel(int iSel) {
       vLedEf2(LedData3,  buttEnt.isSingle());
       break;
   }
+}
+void vPuskAvtoNal() {
+
+}
+bool bLedsOf(){
+  
 }
